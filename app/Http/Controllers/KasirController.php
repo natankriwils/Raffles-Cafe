@@ -21,8 +21,8 @@ class KasirController extends Controller
 
     public function checkout(Request $request)
     {
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-c3v6nUBhZGPQGv0DFIk_qg5W';
-        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+        \Midtrans\Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
