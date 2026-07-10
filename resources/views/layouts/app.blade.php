@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raffles-Cafe POS</title>
+    <title>Raffles-Cafe</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js untuk interaktivitas instan (buka-tutup modal, dll) -->
@@ -17,13 +17,13 @@
     <div class="flex h-full">
         <!-- Sidebar Menu Navigasi (Opsional untuk pindah halaman) -->
         <div class="w-20 bg-amber-900 flex flex-col items-center py-6 justify-between text-white flex-shrink-0">
-            <div class="font-bold text-xl tracking-wider">RC</div>
+            <div class="font-bold text-xl tracking-wider">Raffles Cafe</div>
             <div class="space-y-8 flex flex-col items-center">
-                <a href="#" class="p-3 bg-amber-800 rounded-xl block text-white shadow">🛒</a>
-                <a href="#" class="p-3 text-amber-200 hover:text-white block">📋</a>
-                <a href="#" class="p-3 text-amber-200 hover:text-white block">📊</a>
+                <a href="#" class="p-3 bg-amber-800 rounded-xl block text-white shadow">Kasir</a>
+                <a href="#" class="p-3 text-amber-200 hover:text-white block">Riwayat Transaksi</a>
+                <a href="#" class="p-3 text-amber-200 hover:text-white block">Kelola Data</a>
             </div>
-            <div class="text-sm">🚪</div>
+            <div class="text-sm">Logout</div>
         </div>
 
         <!-- Main Content Area -->

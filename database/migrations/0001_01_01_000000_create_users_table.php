@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            // Taruh role_id di sini, tapi karena tabel 'roles' baru dibuat di file 2026_..., 
-            // kita cukup set sebagai foreignId biasa dulu agar tidak error saat dibaca duluan oleh Laravel.
             $table->foreignId('role_id')->default(2); // Angka default (misal: 2 untuk Kasir)
             $table->string('name');
             $table->string('email')->unique();

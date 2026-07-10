@@ -9,8 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class OrderDetail extends Model
 {
     protected $fillable = [
-        'order_id', 'product_id', 'variant_id', 'quantity', 
-        'price_at_transaction', 'total_price', 'notes'
+        'order_id', 
+        'product_id', 
+        'variant_id', 
+        'quantity', 
+        'price_at_transaction', 
+        'total_price', 'notes'
     ];
 
     public function order(): BelongsTo
@@ -28,7 +32,6 @@ class OrderDetail extends Model
         return $this->belongsTo(Variant::class);
     }
 
-    // Satu item belanjaan (misal Es Kopi) bisa ditempeli banyak topping sekaligus
     public function orderModifiers(): HasMany
     {
         return $this->hasMany(OrderModifier::class);

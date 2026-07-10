@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Contoh: Coffee, Non-Coffee, Pastry
-            $table->string('slug')->unique(); // Untuk kebutuhan URL yang rapi (Contoh: 'non-coffee')
-            $table->boolean('is_active')->default(true); // Memudahkan arsip kategori tanpa hapus data
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->boolean('is_active')->default(true); 
             $table->timestamps();
         });
     }

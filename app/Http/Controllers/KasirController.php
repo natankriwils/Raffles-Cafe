@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;       
-use App\Models\OrderItem;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,20 +14,18 @@ class KasirController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $products = Product::with('variants')->get();
-        
+        $products = Product::with('category')->get(); 
+
         return view('kasir.dashboard', compact('categories', 'products'));
     }
 
     public function checkout(Request $request)
     {
-        // 1. Konfigurasi Awal Midtrans SDK
-        \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        \Midtrans\Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
-        \Midtrans\Config::$isSanitized = env('MIDTRANS_IS_SANITIZED', true);
-        \Midtrans\Config::$is3ds = env('MIDTRANS_IS_3DS', true);
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-c3v6nUBhZGPQGv0DFIk_qg5W';
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
 
-        // 2. Hitung Total Matematis di Backend
         $subtotal = 0;
         $cartItems = $request->cart;
         
@@ -40,39 +38,45 @@ class KasirController extends Controller
 
         $tax = round($subtotal * 0.1); 
         $totalTagihan = $subtotal + $tax;
-        $orderId = 'RC-' . time() . '-' . rand(100, 999); 
-
-        // Ambil ID Kasir & Shift yang sedang login (Tembak manual id=1 jika belum membuat sistem auth login)
+        
+        $orderNumber = 'RC-' . time() . '-' . rand(100, 999); 
         $userId = auth()->id() ?? 1; 
-        $shiftId = 1; // Sesuaikan dengan ID shift aktif di databasemu
+        $shiftId = 1;
 
-        // 3. Gunakan Database Transaction
         DB::beginTransaction();
         try {
-            // Skenario A: TUNAI / CASH
             if ($request->payment_method === 'cash') {
                 $order = Order::create([
-                    'order_number' => $orderId, // Menyesuaikan database
+                    'order_number' => $orderNumber,
                     'user_id' => $userId,
                     'shift_id' => $shiftId,
                     'customer_name' => $request->customer_name ?? 'Pelanggan Umum',
                     'order_type' => $request->order_type,
-                    'status' => 'completed', 
                     'subtotal' => $subtotal,
                     'tax' => $tax,
-                    'total_amount' => $totalTagihan, // Menyesuaikan database
+                    'total_amount' => $totalTagihan, 
                     'payment_method' => 'cash',
                     'payment_status' => 'success', 
-                    'amount_paid' => $request->amount_paid,
-                    'change' => $request->amount_paid - $totalTagihan,
+                    'amount_paid' => $totalTagihan,
+                    'change' => 0,
                 ]);
 
                 foreach ($cartItems as $item) {
-                    OrderItem::create([
+                    $product = \App\Models\Product::find($item['id']);
+                    if (! $product) {
+                        continue;
+                    }
+
+                    $qty = (int) ($item['qty'] ?? 0);
+                    $priceAtTransaction = $product->base_price;
+                    $totalPrice = $priceAtTransaction * $qty;
+
+                    OrderDetail::create([
                         'order_id' => $order->id,
                         'product_id' => $item['id'],
-                        'qty' => $item['qty'],
-                        'price' => $item['price'],
+                        'quantity' => $qty,
+                        'price_at_transaction' => $priceAtTransaction,
+                        'total_price' => $totalPrice,
                     ]);
                 }
 
@@ -80,36 +84,49 @@ class KasirController extends Controller
                 return response()->json(['success' => true, 'message' => 'Transaksi Tunai Berhasil']);
             }
 
-            // Skenario B: MIDTRANS
             if ($request->payment_method === 'midtrans') {
                 $order = Order::create([
-                    'order_number' => $orderId, // Menyesuaikan database
+                    'order_number' => $orderNumber,
                     'user_id' => $userId,
                     'shift_id' => $shiftId,
                     'customer_name' => $request->customer_name ?? 'Pelanggan Umum',
                     'order_type' => $request->order_type,
-                    'status' => 'pending',
                     'subtotal' => $subtotal,
                     'tax' => $tax,
-                    'total_amount' => $totalTagihan, // Menyesuaikan database
+                    'total_amount' => $totalTagihan,
                     'payment_method' => 'midtrans',
-                    'payment_status' => 'pending', 
+                    'payment_status' => 'pending',
                     'amount_paid' => 0,
                     'change' => 0,
                 ]);
 
                 foreach ($cartItems as $item) {
-                    OrderItem::create([
+                    $qty = (int) ($item['qty'] ?? 0);
+
+                    $priceAtTransaction = $item['price'] ?? null;
+                    if ($priceAtTransaction === null) {
+                        $product = \App\Models\Product::find($item['id']);
+                        $priceAtTransaction = $product?->base_price;
+                    }
+
+                    if ($priceAtTransaction === null || $qty <= 0) {
+                        continue;
+                    }
+
+                    $totalPrice = $priceAtTransaction * $qty;
+
+                    OrderDetail::create([
                         'order_id' => $order->id,
                         'product_id' => $item['id'],
-                        'qty' => $item['qty'],
-                        'price' => $item['price'],
+                        'quantity' => $qty,
+                        'price_at_transaction' => $priceAtTransaction,
+                        'total_price' => $totalPrice,
                     ]);
                 }
 
                 $params = [
                     'transaction_details' => [
-                        'order_id' => $orderId, 
+                        'order_id' => $orderNumber,
                         'gross_amount' => (int) $totalTagihan,
                     ],
                     'customer_details' => [
@@ -124,7 +141,7 @@ class KasirController extends Controller
                 
                 return response()->json([
                     'snap_token' => $snapToken,
-                    'order_id' => $orderId
+                    'order_id' => $orderNumber
                 ]);
             }
 
@@ -147,7 +164,6 @@ class KasirController extends Controller
             $orderId = $notif->order_id;
             $fraud = $notif->fraud_status;
 
-            // Menggunakan order_number sesuai struktur asli tabel orders
             $order = Order::where('order_number', $orderId)->first();
 
             if ($order) {
@@ -174,5 +190,4 @@ class KasirController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
 }

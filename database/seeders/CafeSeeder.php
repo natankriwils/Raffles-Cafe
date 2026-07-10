@@ -7,118 +7,78 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Variant;
-use App\Models\Modifier;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class CafeSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Seed Roles (Gunakan firstOrCreate agar tidak bentrok UNIQUE)
-        $adminRole = Role::firstOrCreate(
-            ['name' => 'admin'],
-            ['display_name' => 'Manajer Cafe']
-        );
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
+        DB::table('users')->truncate();
+        DB::table('roles')->truncate();
+        DB::table('categories')->truncate();
+        DB::table('products')->truncate();
+        DB::table('shifts')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
 
-        $cashierRole = Role::firstOrCreate(
-            ['name' => 'kasir'],
-            ['display_name' => 'Kasir Utama']
-        );
+        $adminRole = Role::create(['name' => 'admin', 'display_name' => 'Manajer Cafe']);
+        $cashierRole = Role::create(['name' => 'kasir', 'display_name' => 'Kasir Utama']);
 
-        // 2. Seed Users / Employees
-        User::firstOrCreate(
-            ['email' => 'admin@rafflescafe.com'],
-            [
-                'role_id' => $adminRole->id,
-                'name' => 'Natan Admin',
-                'password' => Hash::make('password123'),
-                'is_active' => true,
-            ]
-        );
+        User::create([
+            'role_id' => $adminRole->id,
+            'name' => 'Natan Admin',
+            'email' => 'admin@rafflescafe.com',
+            'password' => Hash::make('password123'),
+            'is_active' => true,
+        ]);
 
-        $kasir = User::firstOrCreate(
-            ['email' => 'kasir@rafflescafe.com'],
-            [
-                'role_id' => $cashierRole->id,
-                'name' => 'Budi Kasir',
-                'password' => Hash::make('kasir123'),
-                'is_active' => true,
-            ]
-        );
+        User::create([
+            'role_id' => $cashierRole->id,
+            'name' => 'Nathan Admin',
+            'email' => 'kasir@rafflescafe.com',
+            'password' => Hash::make('kasir123'),
+            'is_active' => true,
+        ]);
 
-        // Seed Shift (Gunakan cek manual agar tidak duplikat di SQLite)
-        $checkShift = \Illuminate\Support\Facades\DB::table('shifts')->where('id', 1)->exists();
-        if (!$checkShift) {
-            \Illuminate\Support\Facades\DB::table('shifts')->insert([
-                'id' => 1,
-                'name' => 'Sore',
-                'start_time' => '15:00:00',
-                'end_time' => '23:00:00',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        DB::table('shifts')->insert([
+            'id' => 1,
+            'user_id' => 1, 
+            'start_time' => now(),
+            'end_time' => null,
+            'starting_cash' => 500000.00, 
+            'ending_cash' => null,
+            'difference' => null,
+            'status' => 'open',
+            'notes' => 'Shift pagi dimulai',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        // Berikan nilai 'is_active' => true pada kategori agar lolos filter di KasirController
         $coffee = Category::create(['name' => 'Coffee', 'slug' => 'coffee', 'is_active' => true]);
         $nonCoffee = Category::create(['name' => 'Non-Coffee', 'slug' => 'non-coffee', 'is_active' => true]);
         $pastry = Category::create(['name' => 'Pastry', 'slug' => 'pastry', 'is_active' => true]);
 
-        $extraShot = Modifier::create(['name' => 'Extra Shot Espresso', 'price' => 5000]);
-        $oatside = Modifier::create(['name' => 'Oatside Milk Substitute', 'price' => 8000]);
-        $jelly = Modifier::create(['name' => 'Coffee Jelly', 'price' => 4000]);
-
-        $kopiAren = Product::create([
+        Product::create([
             'category_id' => $coffee->id,
-            'name' => 'Es Kopi Susu Gula Aren',
-            'slug' => 'es-kopi-susu-gula-aren',
-            'description' => 'Espresso blend dengan susu segar dan sirup aren murni.',
+            'name' => 'Americano',
+            'slug' => 'americano',
             'base_price' => 18000,
             'is_active' => true,
         ]);
 
-        Variant::create([
-            'product_id' => $kopiAren->id,
-            'name' => 'Regular',
-            'additional_price' => 0,
-        ]);
-
-        Variant::create([
-            'product_id' => $kopiAren->id,
-            'name' => 'Large',
-            'additional_price' => 5000,
-        ]);
-
-        // Produk 2: Matcha Latte (Punya Varian)
-        $matcha = Product::create([
+        Product::create([
             'category_id' => $nonCoffee->id,
             'name' => 'Matcha Latte',
             'slug' => 'matcha-latte',
-            'description' => 'Pure Uji Matcha premium dengan susu vanilla.',
             'base_price' => 22000,
             'is_active' => true,
         ]);
 
-        Variant::create([
-            'product_id' => $matcha->id,
-            'name' => 'Hot',
-            'additional_price' => 0,
-        ]);
-
-        Variant::create([
-            'product_id' => $matcha->id,
-            'name' => 'Iced',
-            'additional_price' => 2000,
-        ]);
-
-        // Produk 3: Croissant (Tanpa Varian Ukuran)
         Product::create([
             'category_id' => $pastry->id,
-            'name' => 'Butter Croissant',
-            'slug' => 'butter-croissant',
-            'description' => 'Croissant renyah dengan mentega Prancis asli.',
+            'name' => 'Croissant',
+            'slug' => 'croissant',
             'base_price' => 25000,
             'is_active' => true,
         ]);

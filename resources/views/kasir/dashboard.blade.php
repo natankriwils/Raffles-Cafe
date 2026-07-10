@@ -105,8 +105,8 @@
     <div class="w-8/12 flex flex-col h-full bg-gray-50 p-6 overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Raffles-Cafe POS</h1>
-                <p class="text-sm text-gray-500">Kasir: Budi Kasir | Shift: Open</p>
+                <h1 class="text-2xl font-bold text-gray-800">Kasir</h1>
+                <p class="text-sm text-gray-500">Kasir: Natan Kasir | Shift: Open</p>
             </div>
             <div class="w-64">
                 <input type="text" placeholder="Cari menu kopi..." class="w-full px-4 py-2 rounded-lg border border-gray-200 bg-white shadow-sm">
@@ -158,7 +158,7 @@
 
         <div class="flex-1 overflow-y-auto p-4 space-y-4">
             <template x-if="cart.length === 0">
-                <div class="text-center text-gray-400 py-12">🛒 Keranjang Kosong</div>
+                <div class="text-center text-gray-400 py-12">Keranjang Kosong</div>
             </template>
             <template x-for="(item, index) in cart" :key="index">
                 <div class="flex items-start justify-between border-b border-gray-50 pb-3">
@@ -202,12 +202,12 @@
                 <button class="p-4 border rounded-xl flex flex-col items-center gap-2 font-bold"
                         :class="paymentMethod === 'cash' ? 'border-amber-600 bg-amber-50 text-amber-900' : 'border-gray-200 text-gray-600'"
                         @click="paymentMethod = 'cash'; amountPaid = 0">
-                    <span>💵</span> Tunai / Cash
+                    Tunai / Cash
                 </button>
                 <button class="p-4 border rounded-xl flex flex-col items-center gap-2 font-bold"
                         :class="paymentMethod === 'midtrans' ? 'border-amber-600 bg-amber-50 text-amber-900' : 'border-gray-200 text-gray-600'"
                         @click="paymentMethod = 'midtrans'; amountPaid = total">
-                    <span>📱</span> QRIS / E-Wallet
+                    QRIS / E-Wallet
                 </button>
             </div>
 
