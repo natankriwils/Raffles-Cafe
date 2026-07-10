@@ -58,6 +58,7 @@ class CafeSeeder extends Seeder
         $coffee = Category::create(['name' => 'Coffee', 'slug' => 'coffee', 'is_active' => true]);
         $nonCoffee = Category::create(['name' => 'Non-Coffee', 'slug' => 'non-coffee', 'is_active' => true]);
         $pastry = Category::create(['name' => 'Pastry', 'slug' => 'pastry', 'is_active' => true]);
+        $toast = Category::create(['name' => 'Toast', 'slug' => 'toast', 'is_active' => true]);
 
         Product::create([
             'category_id' => $coffee->id,
@@ -79,6 +80,14 @@ class CafeSeeder extends Seeder
             'category_id' => $pastry->id,
             'name' => 'Croissant',
             'slug' => 'croissant',
+            'base_price' => 25000,
+            'is_active' => true,
+        ]);
+
+        Product::create([
+            'category_id' => $toast->id,
+            'name' => 'Beef Toast Bread',
+            'slug' => 'beef-toast-bread',
             'base_price' => 25000,
             'is_active' => true,
         ]);
