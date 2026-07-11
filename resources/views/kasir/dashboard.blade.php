@@ -5,7 +5,9 @@
      x-data="{
         cart: [],
         customerName: '',
+        selectedCategory: 'all',
         orderType: 'dine-in',
+
         taxRate: 0.1,
         showPaymentModal: false,
         paymentMethod: 'cash',
@@ -109,19 +111,36 @@
             </div>
         </div>
 
-        <div class="flex space-x-3 mb-6 overflow-x-auto pb-2">
-            <button class="px-5 py-2 bg-amber-800 text-white font-medium rounded-full text-sm">Semua Menu</button>
-            @foreach($categories as $category)
-                <button class="px-5 py-2 bg-white text-gray-600 font-medium rounded-full border border-gray-200 text-sm">{{ $category->name }}</button>
-            @endforeach
+        <div class="mb-6">
+            <div class="flex space-x-3 overflow-x-auto pb-2">
+                <button
+                    type="button"
+                    class="px-5 py-2 bg-amber-800 text-white font-medium rounded-full text-sm whitespace-nowrap"
+                    @click="selectedCategory = 'all'; cart=[]">
+                    Semua Menu
+                </button>
+
+                @foreach($categories as $category)
+                    <button
+                        type="button"
+                        class="px-5 py-2 bg-white text-gray-600 font-medium rounded-full border border-gray-200 text-sm whitespace-nowrap"
+                        @click="selectedCategory = '{{ $category->slug }}'">
+                        {{ $category->name }}
+                    </button>
+                @endforeach
+            </div>
         </div>
 
+
         <div class="grid grid-cols-3 gap-4">
-            @foreach($products as $product)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col justify-between hover:border-amber-500 transition cursor-pointer"
-                     @click="addToCart({ id: {{ $product->id }}, name: '{{ $product->name }}', base_price: {{ $product->base_price }} })">
-                    <div>
-                        <div class="w-full h-32 rounded-lg mb-3 flex items-center justify-center font-bold p-4 text-center text-sm
+@foreach($products as $product)
+                @if(!isset($selectedCategory) || $selectedCategory === 'all' || $product->category->slug === $selectedCategory)
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col justify-between hover:border-amber-500 transition cursor-pointer"
+                         @click="addToCart({ id: {{ $product->id }}, name: '{{ $product->name }}', base_price: {{ $product->base_price }} })">
+
+                        <div>
+                        <div class="w-full h-32
                             @if($product->category->slug == 'coffee') bg-amber-100 text-amber-800 
                             @elif($product->category->slug == 'non-coffee') bg-emerald-100 text-emerald-800 
                             @else bg-orange-100 text-orange-800 @endif">
@@ -135,7 +154,9 @@
                         <span class="text-xs bg-green-100 text-green-700 font-medium px-2 py-1 rounded">Ready</span>
                     </div>
                 </div>
+                @endif
             @endforeach
+
         </div>
     </div>
 

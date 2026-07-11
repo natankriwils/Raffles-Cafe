@@ -1,11 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\KasirController;
 
-Route::get('/kasir', [KasirController::class, 'index']);
-Route::post('/kasir/checkout', [KasirController::class, 'checkout']);
-Route::post('/kasir/notification', [KasirController::class, 'notification']);
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/kasir', [KasirController::class, 'index'])->name('kasir.index');
+    Route::post('/kasir/checkout', [KasirController::class, 'checkout'])->name('kasir.checkout');
+
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
+        ->name('dashboard.index');
+
+    Route::get('/riwayat-transaksi', [\App\Http\Controllers\RiwayatController::class, 'index'])
+        ->name('riwayat.index');
+});
+
+Route::get('/', [\App\Http\Controllers\RedirectController::class, 'home'])->middleware('auth')->name('home');
+
+
 Route::get('/simulasi-lunas/{order_id}', function($order_id) {
     $order = \App\Models\Order::where('order_number', $order_id)->first();
     if ($order) {
@@ -14,6 +30,7 @@ Route::get('/simulasi-lunas/{order_id}', function($order_id) {
     }
     return "Order ID tidak ditemukan.";
 });
+
 Route::get('/tes-database', function() {
     return response()->json([
         'total_kategori' => \App\Models\Category::count(),

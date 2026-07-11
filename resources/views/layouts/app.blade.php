@@ -14,11 +14,27 @@
         <div class="w-20 bg-amber-900 flex flex-col items-center py-6 justify-between text-white flex-shrink-0">
             <div class="font-bold text-xl tracking-wider">Raffles Cafe</div>
             <div class="space-y-8 flex flex-col items-center">
-                <a href="#" class="p-3 bg-amber-800 rounded-xl block text-white shadow">Kasir</a>
-                <a href="#" class="p-3 text-amber-200 hover:text-white block">Riwayat Transaksi</a>
-                <a href="#" class="p-3 text-amber-200 hover:text-white block">Kelola Data</a>
+                <a href="{{ route('kasir.index') }}"
+                   class="p-3 {{ request()->routeIs('kasir.index') ? 'bg-amber-800 text-white shadow rounded-xl' : 'text-amber-200 hover:text-white' }} block">
+                    Kasir
+                </a>
+
+                <a href="{{ route('riwayat.index') }}"
+                   class="p-3 {{ request()->routeIs('riwayat.index') ? 'bg-amber-800 text-white shadow rounded-xl' : 'text-amber-200 hover:text-white' }} block">
+                    Riwayat Transaksi
+                </a>
+
+                <a href="{{ route('dashboard.index') }}"
+                   class="p-3 {{ request()->routeIs('dashboard.index') ? 'bg-amber-800 text-white shadow rounded-xl' : 'text-amber-200 hover:text-white' }} block">
+                    Dashboard
+                </a>
             </div>
-            <div class="text-sm">Logout</div>
+
+            <form method="POST" action="{{ route('logout') }}" class="text-sm">
+                @csrf
+                <button type="submit" class="p-2 text-amber-200 hover:text-white">Logout</button>
+            </form>
+
         </div>
 
         <!-- Main Content Area -->

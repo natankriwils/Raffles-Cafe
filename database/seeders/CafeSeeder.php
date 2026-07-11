@@ -27,17 +27,17 @@ class CafeSeeder extends Seeder
 
         User::create([
             'role_id' => $adminRole->id,
-            'name' => 'Natan Admin',
-            'email' => 'admin@rafflescafe.com',
-            'password' => Hash::make('password123'),
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('admin123'),
             'is_active' => true,
         ]);
 
         User::create([
             'role_id' => $cashierRole->id,
             'name' => 'Nathan Admin',
-            'email' => 'kasir@rafflescafe.com',
-            'password' => Hash::make('kasir123'),
+            'email' => 'tristanathanaurell@gmail.com',
+            'password' => Hash::make('Admin310'),
             'is_active' => true,
         ]);
 

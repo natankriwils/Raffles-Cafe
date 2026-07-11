@@ -10,11 +10,14 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->validateCsrfTokens(except: [
-            'kasir/notification', 
-        ]);
+        $middleware->redirectTo(
+            guests: '/login',
+            users: '/kasir' 
+        );
     })
+
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
