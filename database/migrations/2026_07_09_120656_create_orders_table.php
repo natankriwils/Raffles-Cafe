@@ -10,24 +10,20 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number')->unique(); // Tetap pakai order_number sesuai strukturmu
+            $table->string('order_number')->unique(); 
             
-            // Relasi ke operasional
             $table->foreignId('user_id')->constrained('users'); 
             $table->foreignId('shift_id')->constrained('shifts'); 
             
-            // Detail pesanan
             $table->string('customer_name')->nullable(); 
             $table->enum('order_type', ['dine-in', 'take-away', 'delivery'])->default('dine-in');
             $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
             
-            // Finansial
             $table->decimal('subtotal', 14, 2); 
             $table->decimal('discount', 14, 2)->default(0); 
             $table->decimal('tax', 14, 2)->default(0); 
-            $table->decimal('total_amount', 14, 2); // Tetap pakai total_amount sesuai strukturmu
+            $table->decimal('total_amount', 14, 2);
             
-            // Tambahan Kolom untuk Sistem Kasir & Midtrans
             $table->string('payment_method')->nullable();
             $table->string('payment_status')->default('pending');
             $table->string('snap_token')->nullable();

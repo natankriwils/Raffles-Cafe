@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique(); // Contoh: 'admin', 'kasir', 'barista'
-            $table->string('display_name'); // Nama yang muncul di UI (Contoh: 'Kasir Utama')
+            $table->string('name')->unique();
+            $table->string('display_name'); 
             $table->timestamps();
         });
     }

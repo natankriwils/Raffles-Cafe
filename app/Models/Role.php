@@ -9,7 +9,6 @@ class Role extends Model
 {
     protected $fillable = ['name', 'display_name'];
 
-    // Satu role bisa dimiliki oleh banyak user (Kasir bisa banyak orang)
     public function users(): HasMany
     {
         return $this->hasMany(User::class);

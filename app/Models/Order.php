@@ -35,13 +35,11 @@ class Order extends Model
         return $this->belongsTo(Shift::class);
     }
 
-    // Satu nota order memiliki beberapa baris detail item yang dibeli
     public function details(): HasMany
     {
         return $this->hasMany(OrderDetail::class);
     }
 
-    // Satu order idealnya punya satu catatan pembayaran lunas
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);

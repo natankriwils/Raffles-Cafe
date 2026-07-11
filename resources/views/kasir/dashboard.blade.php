@@ -72,17 +72,14 @@
             })
             .then(data => {
                 if (data.snap_token) {
-                    // Tutup modal pilihan pembayaran dahulu
                     this.showPaymentModal = false;
 
-                    // Pemicu otomatis Pop-up Snap Midtrans
                     window.snap.pay(data.snap_token, {
                         onSuccess: function(result){ 
                             alert('Pembayaran Sukses!'); 
                             location.reload(); 
                         },
                         onPending: function(result){ 
-                            // Jalur alternatif yang biasa kamu pakai: memunculkan link jika ingin di-copy manual
                             alert('Order ID: ' + data.order_id + '\n\nSilakan cek status atau simulasikan di Midtrans Sandbox!');
                             location.reload();
                         },
@@ -101,7 +98,6 @@
         }
      }">
 
-    <!-- SISI KIRI: Katalog Menu & Kategori -->
     <div class="w-8/12 flex flex-col h-full bg-gray-50 p-6 overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
             <div>
@@ -143,7 +139,6 @@
         </div>
     </div>
 
-    <!-- SISI KANAN: Sidebar Keranjang -->
     <div class="w-4/12 bg-white border-l border-gray-200 h-full flex flex-col justify-between shadow-lg">
         <div class="p-4 border-b border-gray-100">
             <div class="mb-3">
@@ -211,7 +206,6 @@
                 </button>
             </div>
 
-            <!-- Input Uang Tunai (Hanya muncul jika memilih Cash) -->
             <div x-show="paymentMethod === 'cash'" class="space-y-2">
                 <label class="block text-sm font-semibold text-gray-600">Uang Tunai yang Diterima</label>
                 <input type="number" x-model.number="amountPaid" class="w-full px-4 py-2 border rounded-lg text-lg font-bold focus:ring-amber-600">

@@ -7,5 +7,4 @@ use Illuminate\Database\Eloquent\Model;
 class Modifier extends Model
 {
     protected $fillable = ['name', 'price', 'is_available'];
-    // Modifier sifatnya umum, relasinya nanti dicatat langsung lewat jembatan transaksi
 }

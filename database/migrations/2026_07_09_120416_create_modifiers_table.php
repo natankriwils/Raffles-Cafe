@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('modifiers', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Contoh: 'Extra Shot Espresso', 'Oatside Milk', 'Grass Jelly'
-            $table->decimal('price', 14, 2); // Harga toppingnya (misal: Oatside Milk +Rp 8.000)
+            $table->string('name');
+            $table->decimal('price', 14, 2);
             $table->boolean('is_available')->default(true);
             $table->timestamps();
         });

@@ -15,7 +15,6 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // Satu produk bisa punya banyak varian (Regular, Large)
     public function variants(): HasMany
     {
         return $this->hasMany(Variant::class);

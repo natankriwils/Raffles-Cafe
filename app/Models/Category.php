@@ -9,7 +9,6 @@ class Category extends Model
 {
     protected $fillable = ['name', 'slug', 'is_active'];
 
-    // Satu kategori punya banyak produk (Kategori 'Coffee' punya banyak menu kopi)
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);

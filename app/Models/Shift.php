@@ -13,13 +13,11 @@ class Shift extends Model
         'ending_cash', 'difference', 'status', 'notes'
     ];
 
-    // Shift ini dibuka oleh kasir siapa?
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    // Selama shift ini berjalan, ada transaksi apa saja yang masuk?
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);

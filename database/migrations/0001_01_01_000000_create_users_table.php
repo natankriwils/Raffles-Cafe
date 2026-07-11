@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_id')->default(2); // Angka default (misal: 2 untuk Kasir)
+            $table->foreignId('role_id')->default(2);
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('is_active')->default(true); // Tambahan status aktif untuk karyawan Raffles-Cafe
+            $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

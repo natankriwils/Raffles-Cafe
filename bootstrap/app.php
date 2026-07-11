@@ -11,7 +11,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // TAMBAHKAN BARIS INI UNTUK LARAVEL 12
         $middleware->validateCsrfTokens(except: [
             'kasir/notification', 
         ]);
