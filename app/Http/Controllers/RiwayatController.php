@@ -12,7 +12,6 @@ class RiwayatController extends Controller
         $query = Order::query()
             ->orderByDesc('created_at');
 
-        // Filter singkat
         if ($request->filled('status')) {
             $query->where('payment_status', $request->input('status'));
         }

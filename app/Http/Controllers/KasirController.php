@@ -16,7 +16,8 @@ class KasirController extends Controller
         $categories = Category::all();
         $products = Product::with('category')->get(); 
 
-        return view('kasir.dashboard', compact('categories', 'products'));
+        return view('kasir.kasir', compact('categories', 'products'));
+
     }
 
     public function checkout(Request $request)

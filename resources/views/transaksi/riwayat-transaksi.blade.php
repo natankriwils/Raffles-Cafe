@@ -2,70 +2,86 @@
 
 @section('content')
 <div class="flex-1 flex overflow-hidden">
-    <div class="flex-1 overflow-y-auto p-6">
-        <div class="flex items-start justify-between mb-6">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">Riwayat Transaksi</h1>
-                <p class="text-sm text-gray-500">Daftar transaksi kasir</p>
+    <div class="flex-1 overflow-y-auto p-8 bg-[#FAF8F5]">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <img src="{{ asset('images/riwayat-transaksi.png') }}" alt="Order History" class="w-10 h-10 object-contain">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-[#1C2220] tracking-tight">Transaction History</h1>
+                    <p class="text-xs font-semibold text-[#7A827E] tracking-widest uppercase mt-0.5">Manage and monitor customer order statuses</p>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-4">
-            <form method="GET" action="{{ route('riwayat.index') }}" class="flex flex-wrap items-center gap-3">
-                <div>
-                    <label class="text-sm text-gray-600 font-medium">Status Pembayaran</label>
-                    <select name="status" class="mt-1 px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm">
-                        <option value="" {{ request('status')==='' ? 'selected' : '' }}>Semua</option>
-                        <option value="success" {{ request('status')==='success' ? 'selected' : '' }}>Success</option>
-                        <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="failed" {{ request('status')==='failed' ? 'selected' : '' }}>Failed</option>
-                    </select>
-                </div>
-                <div class="self-end">
-                    <button type="submit" class="px-4 py-2 bg-amber-900 text-white rounded-xl font-bold hover:bg-amber-800">Filter</button>
-                </div>
+        <div class="bg-white rounded-2xl border border-[#EAE7E1] p-5 mb-6 shadow-sm flex justify-between items-center">
+            <form method="GET" action="{{ route('riwayat.index') }}" class="flex items-center gap-3">
+                <label class="text-xs font-bold text-[#7A827E] tracking-widest uppercase">Payment Status:</label>
+                <select name="status" onchange="this.form.submit()" 
+                        class="px-4 py-2 rounded-xl border border-[#EAE7E1] bg-[#FAF8F5] text-[#1C2220] text-xs font-bold uppercase tracking-wider focus:outline-none focus:border-[#244C38] focus:ring-2 focus:ring-[#244C38]/15 transition-all cursor-pointer">
+                    <option value="" {{ request('status')==='' ? 'selected' : '' }}>All Status</option>
+                    <option value="success" {{ request('status')==='success' ? 'selected' : '' }}>Success</option>
+                    <option value="pending" {{ request('status')==='pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="failed" {{ request('status')==='failed' ? 'selected' : '' }}>Failed</option>
+                </select>
             </form>
+            <span class="text-xs text-[#7A827E] font-medium">Showing {{ $orders->count() }} records</span>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-2xl border border-[#EAE7E1] overflow-hidden shadow-sm">
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
-                    <thead class="bg-gray-50 border-b">
+                    <thead class="bg-[#FAF8F5] border-b border-[#EAE7E1]">
                         <tr>
-                            <th class="text-left px-4 py-3 font-bold text-gray-700">Order #</th>
-                            <th class="text-left px-4 py-3 font-bold text-gray-700">Tanggal</th>
-                            <th class="text-left px-4 py-3 font-bold text-gray-700">Customer</th>
-                            <th class="text-left px-4 py-3 font-bold text-gray-700">Metode</th>
-                            <th class="text-left px-4 py-3 font-bold text-gray-700">Status</th>
-                            <th class="text-right px-4 py-3 font-bold text-gray-700">Total</th>
+                            <th class="text-left px-6 py-4 font-bold text-[#7A827E] text-[11px] tracking-widest uppercase">Order #</th>
+                            <th class="text-left px-6 py-4 font-bold text-[#7A827E] text-[11px] tracking-widest uppercase">Date &amp; Time</th>
+                            <th class="text-left px-6 py-4 font-bold text-[#7A827E] text-[11px] tracking-widest uppercase">Customer</th>
+                            <th class="text-left px-6 py-4 font-bold text-[#7A827E] text-[11px] tracking-widest uppercase">Method</th>
+                            <th class="text-left px-6 py-4 font-bold text-[#7A827E] text-[11px] tracking-widest uppercase">Status</th>
+                            <th class="text-right px-6 py-4 font-bold text-[#7A827E] text-[11px] tracking-widest uppercase">Total Amount</th>
+                            <th class="text-center px-6 py-4 font-bold text-[#7A827E] text-[11px] tracking-widest uppercase">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-[#FAF8F5]">
                         @forelse($orders as $order)
-                            <tr class="border-b last:border-b-0">
-                                <td class="px-4 py-3 font-semibold text-gray-800">{{ $order->order_number }}</td>
-                                <td class="px-4 py-3 text-gray-600">{{ $order->created_at->format('d M Y, H:i') }}</td>
-                                <td class="px-4 py-3 text-gray-600">{{ $order->customer_name ?? '-' }}</td>
-                                <td class="px-4 py-3 text-gray-600">{{ $order->payment_method ?? '-' }}</td>
-                                <td class="px-4 py-3">
-                                    @php
-                                        $status = $order->payment_status;
-                                    @endphp
+                            <tr class="hover:bg-[#FAF8F5]/60 transition-colors">
+                                <td class="px-6 py-4 font-bold text-[#1C2220] font-mono">{{ $order->order_number }}</td>
+                                <td class="px-6 py-4 text-[#4A524F] font-medium">{{ $order->created_at->format('d M Y, H:i') }}</td>
+                                <td class="px-6 py-4 text-[#1C2220] font-semibold">{{ $order->customer_name ?? '-' }}</td>
+                                <td class="px-6 py-4 text-[#4A524F] uppercase text-xs font-bold">{{ $order->payment_method ?? '-' }}</td>
+                                
+                                <td class="px-6 py-4">
+                                    @php $status = $order->payment_status; @endphp
                                     @if($status === 'success')
-                                        <span class="px-2 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">Success</span>
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-[#EAF2EE] text-[#244C38] border border-[#C5DCD0] tracking-wider uppercase">
+                                            <img src="{{ asset('images/success.png') }}" class="w-3.5 h-3.5 object-contain" alt="Success">
+                                            Success
+                                        </span>
                                     @elseif($status === 'pending')
-                                        <span class="px-2 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">Pending</span>
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-[#FFF9E6] text-[#D99000] border border-[#FFE8A3] tracking-wider uppercase">
+                                            <img src="{{ asset('images/pending.png') }}" class="w-3.5 h-3.5 object-contain" alt="Pending">
+                                            Pending
+                                        </span>
                                     @elseif($status === 'failed')
-                                        <span class="px-2 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">Failed</span>
+                                        <span class="px-3 py-1 rounded-full text-[11px] font-extrabold bg-[#FFEBEE] text-[#C62828] border border-[#FFCDD2] tracking-wider uppercase">Failed</span>
                                     @else
-                                        <span class="px-2 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700">{{ $status }}</span>
+                                        <span class="px-3 py-1 rounded-full text-[11px] font-extrabold bg-gray-100 text-gray-600 tracking-wider uppercase">{{ $status }}</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-right font-bold text-gray-800">Rp {{ number_format((float)$order->total_amount, 0, ',', '.') }}</td>
+
+                                <td class="px-6 py-4 text-right font-extrabold text-base text-[#244C38]">Rp {{ number_format((float)$order->total_amount, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 text-center">
+                                <form action="{{ route('transaksi.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-3 py-1.5 bg-[#FFF5F5] hover:bg-[#FFE0E0] text-[#D9534F] rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-colors border border-[#FFE0E0]">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-4 py-8 text-center text-gray-400">Belum ada transaksi.</td>
+                                <td colspan="7" class="px-6 py-16 text-center text-[#B0B7B4] text-xs font-bold tracking-widest uppercase">No transaction records found.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -73,10 +89,9 @@
             </div>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-6">
             {{ $orders->links() }}
         </div>
     </div>
 </div>
 @endsection
-
