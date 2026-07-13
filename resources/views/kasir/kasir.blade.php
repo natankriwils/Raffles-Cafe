@@ -34,43 +34,20 @@
         </div>
 
         <div class="mb-6">
-            <div class="flex space-x-2 overflow-x-auto pb-2">
-                <button type="button"
-                    class="px-6 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-200 shadow-sm"
-                    :class="selectedCategory === 'all' ? 'bg-[#244C38] text-white shadow-[#244C38]/15' : 'bg-white text-[#4A524F] border border-[#EAE7E1] hover:border-[#244C38] hover:text-[#1C2220]'"
-                    @click="selectedCategory = 'all'">
+            <div class="flex flex-wrap gap-2">
+                <button @click="selectedCategory = 'all'" 
+                        :class="selectedCategory === 'all' ? 'bg-[#244C38] text-white' : 'bg-white text-gray-700 border border-[#EAE7E1]'"
+                        class="px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all uppercase tracking-wider shadow-sm">
                     All Menu
                 </button>
-                <button type="button"
-                    class="px-6 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-200 shadow-sm"
-                    :class="selectedCategory === 'coffee' ? 'bg-[#244C38] text-white shadow-[#244C38]/15' : 'bg-white text-[#4A524F] border border-[#EAE7E1] hover:border-[#244C38] hover:text-[#1C2220]'"
-                    @click="selectedCategory = 'coffee'">
-                    Coffee
+                
+                @foreach($categories as $cat)
+                <button @click="selectedCategory = '{{ $cat->slug }}'" 
+                        :class="selectedCategory === '{{ $cat->slug }}' ? 'bg-[#244C38] text-white' : 'bg-white text-gray-700 border border-[#EAE7E1]'"
+                        class="px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all uppercase tracking-wider shadow-sm">
+                    {{ $cat->name }}
                 </button>
-                <button type="button"
-                    class="px-6 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-200 shadow-sm"
-                    :class="selectedCategory === 'non-coffee' ? 'bg-[#244C38] text-white shadow-[#244C38]/15' : 'bg-white text-[#4A524F] border border-[#EAE7E1] hover:border-[#244C38] hover:text-[#1C2220]'"
-                    @click="selectedCategory = 'non-coffee'">
-                    Non-Coffee
-                </button>
-                <button type="button"
-                    class="px-6 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-200 shadow-sm"
-                    :class="selectedCategory === 'matcha' ? 'bg-[#244C38] text-white shadow-[#244C38]/15' : 'bg-white text-[#4A524F] border border-[#EAE7E1] hover:border-[#244C38] hover:text-[#1C2220]'"
-                    @click="selectedCategory = 'matcha'">
-                    Matcha
-                </button>
-                <button type="button"
-                    class="px-6 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-200 shadow-sm"
-                    :class="selectedCategory === 'toast' ? 'bg-[#244C38] text-white shadow-[#244C38]/15' : 'bg-white text-[#4A524F] border border-[#EAE7E1] hover:border-[#244C38] hover:text-[#1C2220]'"
-                    @click="selectedCategory = 'toast'">
-                    Toast
-                </button>
-                <button type="button"
-                    class="px-6 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-200 shadow-sm"
-                    :class="selectedCategory === 'pastry' ? 'bg-[#244C38] text-white shadow-[#244C38]/15' : 'bg-white text-[#4A524F] border border-[#EAE7E1] hover:border-[#244C38] hover:text-[#1C2220]'"
-                    @click="selectedCategory = 'pastry'">
-                    Pastry
-                </button>
+                @endforeach
             </div>
         </div>
 
@@ -234,11 +211,9 @@
 
             get filteredProducts() {
                 return this.products.filter(item => {
-                    const matchesCat = (this.selectedCategory === 'all') || 
-                                       (item.category_slug.includes(this.selectedCategory)) || 
-                                       (item.category_name.toLowerCase().includes(this.selectedCategory));
-                    const matchesSearch = item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-                                          (item.description && item.description.toLowerCase().includes(this.searchQuery.toLowerCase()));
+                    const matchesCat = (this.selectedCategory === 'all') || (item.category_slug === this.selectedCategory);
+                                       
+                    const matchesSearch = item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || (item.description && item.description.toLowerCase().includes(this.searchQuery.toLowerCase()));
                     return matchesCat && matchesSearch;
                 });
             },

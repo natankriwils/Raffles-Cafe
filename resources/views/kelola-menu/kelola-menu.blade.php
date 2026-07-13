@@ -39,7 +39,6 @@
                                     <th class="py-3 px-3">Name</th>
                                     <th class="py-3 px-3">Category</th>
                                     <th class="py-3 px-3">Price</th>
-                                    <th class="py-3 px-3">Status</th>
                                     <th class="py-3 px-3 text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -48,14 +47,7 @@
                                 <tr class="hover:bg-[#FAF8F5]/50 transition-colors">
                                     <td class="py-3 px-3 font-bold">{{ $product->name }}</td>
                                     <td class="py-3 px-3"><span class="bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#EAE7E1] text-[#4A524F]">{{ $product->category->name ?? 'Uncategorized' }}</span></td>
-                                    <td class="py-3 px-3 font-extrabold text-[#244C38]">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
-                                    <td class="py-3 px-3">
-                                        @if($product->status === 'available')
-                                            <span class="text-[10px] font-extrabold text-[#244C38] bg-[#EAF2EE] px-2 py-0.5 rounded-full border border-[#C5DCD0] uppercase">Available</span>
-                                        @else
-                                            <span class="text-[10px] font-extrabold text-[#7A827E] bg-gray-100 px-2 py-0.5 rounded-full border border-gray-200 uppercase">Empty</span>
-                                        @endif
-                                    </td>
+                                    <td class="py-3 px-3 font-extrabold text-[#244C38]">Rp {{ number_format($product->base_price, 0, ',', '.') }}</td>
                                     <td class="py-3 px-3 text-center flex items-center justify-center gap-2">
                                         <button @click="currentProduct = {{ json_encode($product) }}; openEditModal = true" class="text-xs font-bold text-[#244C38] hover:underline bg-[#EAF2EE] px-2.5 py-1 rounded-md border border-[#C5DCD0]">Edit</button>
                                         <form action="{{ route('kelola-menu.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
@@ -66,7 +58,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="py-8 text-center text-gray-400">Belum ada produk terdaftar.</td>
+                                    <td colspan="4" class="py-8 text-center text-gray-400">Belum ada produk terdaftar.</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -76,7 +68,6 @@
             </div>
 
             <div class="space-y-6 lg:col-span-1">
-                
                 <div class="bg-white rounded-2xl border border-[#EAE7E1] p-5 shadow-sm">
                     <h2 class="font-extrabold text-[#1C2220] text-sm mb-3">Add Category</h2>
                     <form action="{{ route('kelola-menu.storeCategory') }}" method="POST" class="space-y-3">
@@ -103,7 +94,6 @@
                         @endforeach
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -132,13 +122,6 @@
                 <div>
                     <label class="block text-xs font-bold text-[#7A827E] uppercase mb-1">Price (Rp)</label>
                     <input type="number" name="price" required class="w-full text-xs font-semibold px-3 py-2.5 bg-[#FAF8F5] border border-[#EAE7E1] rounded-xl focus:outline-none focus:border-[#244C38]">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-[#7A827E] uppercase mb-1">Status Stock</label>
-                    <select name="status" class="w-full text-xs font-semibold px-3 py-2.5 bg-[#FAF8F5] border border-[#EAE7E1] rounded-xl focus:outline-none focus:border-[#244C38]">
-                        <option value="available">Available</option>
-                        <option value="unavailable">Unavailable (Empty)</option>
-                    </select>
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" @click="openAddModal = false" class="px-4 py-2 text-xs font-bold text-[#7A827E] bg-gray-100 rounded-xl">Cancel</button>
@@ -171,14 +154,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-[#7A827E] uppercase mb-1">Price (Rp)</label>
-                    <input type="number" name="price" :value="currentProduct.price" required class="w-full text-xs font-semibold px-3 py-2.5 bg-[#FAF8F5] border border-[#EAE7E1] rounded-xl focus:outline-none focus:border-[#244C38]">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-[#7A827E] uppercase mb-1">Status Stock</label>
-                    <select name="status" class="w-full text-xs font-semibold px-3 py-2.5 bg-[#FAF8F5] border border-[#EAE7E1] rounded-xl focus:outline-none focus:border-[#244C38]">
-                        <option value="available" :selected="currentProduct.status == 'available'">Available</option>
-                        <option value="unavailable" :selected="currentProduct.status == 'unavailable'">Unavailable (Empty)</option>
-                    </select>
+                    <input type="number" name="price" :value="currentProduct.base_price" required class="w-full text-xs font-semibold px-3 py-2.5 bg-[#FAF8F5] border border-[#EAE7E1] rounded-xl focus:outline-none focus:border-[#244C38]">
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" @click="openEditModal = false" class="px-4 py-2 text-xs font-bold text-[#7A827E] bg-gray-100 rounded-xl">Cancel</button>

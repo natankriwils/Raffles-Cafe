@@ -13,11 +13,10 @@ class KasirController extends Controller
 {
     public function index()
     {
+        $products = Product::with('category')->get();
         $categories = Category::all();
-        $products = Product::with('category')->get(); 
 
-        return view('kasir.kasir', compact('categories', 'products'));
-
+        return view('kasir.kasir', compact('products', 'categories'));
     }
 
     public function checkout(Request $request)

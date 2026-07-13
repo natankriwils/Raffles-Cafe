@@ -260,7 +260,6 @@
     </div>
 </div>
 
-<!-- Modal 2: All Top Categories -->
 <div id="modalCategories" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
     <div class="bg-white rounded-2xl border border-[#EAE7E1] w-full max-w-lg overflow-hidden shadow-2xl animate-fade-in-up flex flex-col max-h-[80vh]">
         <div class="p-6 bg-[#FAF8F5] border-b border-[#EAE7E1] flex items-center justify-between shrink-0">

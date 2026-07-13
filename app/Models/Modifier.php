@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Modifier extends Model
 {
-    protected $fillable = ['name', 'price', 'is_available'];
+    protected $fillable = [
+        'name', 
+        'price', 
+        'is_available'
+    ];
 }

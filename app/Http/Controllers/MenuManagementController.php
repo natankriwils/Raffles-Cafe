@@ -22,14 +22,13 @@ class MenuManagementController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|in:available,unavailable',
         ]);
 
         Product::create([
             'name' => $request->name,
+            'slug' => \Illuminate\Support\Str::slug($request->name),
             'category_id' => $request->category_id,
-            'price' => $request->price,
-            'status' => $request->status,
+            'base_price' => $request->price,
         ]);
 
         return redirect()->back()->with('success', 'Menu berhasil ditambahkan!');
@@ -41,15 +40,15 @@ class MenuManagementController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|in:available,unavailable',
         ]);
 
         $product = Product::findOrFail($id);
+        
         $product->update([
             'name' => $request->name,
+            'slug' => \Illuminate\Support\Str::slug($request->name),
             'category_id' => $request->category_id,
-            'price' => $request->price,
-            'status' => $request->status,
+            'base_price' => $request->price,
         ]);
 
         return redirect()->back()->with('success', 'Menu berhasil diperbarui!');
@@ -69,7 +68,10 @@ class MenuManagementController extends Controller
             'name' => 'required|string|unique:categories,name|max:255'
         ]);
 
-        Category::create(['name' => $request->name]);
+        Category::create([
+            'name' => $request->name,
+            'slug' => \Illuminate\Support\Str::slug($request->name),
+        ]);
 
         return redirect()->back()->with('success', 'Kategori baru berhasil ditambahkan!');
     }

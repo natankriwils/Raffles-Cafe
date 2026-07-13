@@ -9,8 +9,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Shift extends Model
 {
     protected $fillable = [
-        'user_id', 'start_time', 'end_time', 'starting_cash', 
-        'ending_cash', 'difference', 'status', 'notes'
+        'user_id', 
+        'start_time', 
+        'end_time', 
+        'starting_cash', 
+        'ending_cash', 
+        'difference', 
+        'status', 
+        'notes'
     ];
 
     public function user(): BelongsTo

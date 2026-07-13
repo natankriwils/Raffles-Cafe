@@ -71,6 +71,7 @@ class DashboardController extends Controller
                     ->sum('total_amount'),
             ];
         }
+        
         $monthlyLabels = array_map(fn ($x) => $x['label'], $monthly);
         $monthlyAmounts = array_map(fn ($x) => (float) $x['amount'], $monthly);
 
