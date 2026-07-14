@@ -7,13 +7,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
-{
-    protected $fillable = [
-        'name', 
-        'slug', 
-        'category_id', 
-        'base_price',
+    {
+        protected $fillable = [
+        'name',
+        'slug',
+        'category_id',
+        'ingredient_id',
+        'price',
+        'stock',
+        'is_instant',
+        'image',
+        'description',
     ];
+
+    public function ingredient()
+    {
+        return $this->belongsTo(Ingredient::class);
+    }
 
     public function category(): BelongsTo
     {

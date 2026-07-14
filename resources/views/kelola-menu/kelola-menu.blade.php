@@ -7,7 +7,7 @@
         <div class="flex items-center justify-between mb-8">
             <div class="flex items-center gap-4">
                 <div class="p-2.5 bg-white rounded-2xl border border-[#EAE7E1] shadow-sm">
-                    <img src="{{ asset('images/editmenu.png') }}" alt="Menu Management" class="w-10 h-10 object-contain">
+                    <img src="{{ asset('images/kelolamenu.png') }}" alt="Menu Management" class="w-10 h-10 object-contain">
                 </div>
                 <div>
                     <h1 class="text-3xl font-extrabold text-[#1C2220] tracking-tight">Menu Management</h1>

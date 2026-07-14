@@ -32,7 +32,7 @@
                        {{ request()->routeIs('kasir.index') 
                             ? 'bg-[#244C38] text-white shadow-md shadow-[#244C38]/15 font-extrabold border border-transparent' 
                             : 'text-[#4A524F] bg-white border border-[#EAE7E1] hover:bg-[#FAF8F5] hover:border-[#244C38] hover:text-[#1C2220]' }}">
-                        <div class="p-1.5 rounded-lg bg-[#FAF8F5] group-hover:bg-white shrink-0 border border-[#FAF8F5]">
+                        <div class="p-1.5 rounded-lg bg-[#FAF8F5] shrink-0 border border-[#FAF8F5]">
                             <img src="{{ asset('images/kasir.png') }}" alt="Cashier" class="w-4 h-4 object-contain">
                         </div>
                         <span>Cashier</span>
@@ -43,7 +43,7 @@
                        {{ request()->routeIs('riwayat.index') 
                             ? 'bg-[#244C38] text-white shadow-md shadow-[#244C38]/15 font-extrabold border border-transparent' 
                             : 'text-[#4A524F] bg-white border border-[#EAE7E1] hover:bg-[#FAF8F5] hover:border-[#244C38] hover:text-[#1C2220]' }}">
-                        <div class="p-1.5 rounded-lg bg-[#FAF8F5] group-hover:bg-white shrink-0 border border-[#FAF8F5]">
+                        <div class="p-1.5 rounded-lg bg-[#FAF8F5] shrink-0 border border-[#FAF8F5]">
                             <img src="{{ asset('images/riwayat-transaksi.png') }}" alt="Order History" class="w-5 h-5 object-contain">
                         </div>
                         <span>Order History</span>
@@ -54,7 +54,7 @@
                        {{ request()->routeIs('dashboard.index') 
                             ? 'bg-[#244C38] text-white shadow-md shadow-[#244C38]/15 font-extrabold border border-transparent' 
                             : 'text-[#4A524F] bg-white border border-[#EAE7E1] hover:bg-[#FAF8F5] hover:border-[#244C38] hover:text-[#1C2220]' }}">
-                        <div class="p-1.5 rounded-lg bg-[#FAF8F5] group-hover:bg-white shrink-0 border border-[#FAF8F5]">
+                        <div class="p-1.5 rounded-lg bg-[#FAF8F5] shrink-0 border border-[#FAF8F5]">
                             <img src="{{ asset('images/dashboard.png') }}" alt="Dashboard" class="w-5 h-5 object-contain">
                         </div>
                         <span>Dashboard</span>
@@ -65,10 +65,21 @@
                        {{ request()->routeIs('kelola-menu.*') 
                             ? 'bg-[#244C38] text-white shadow-md shadow-[#244C38]/15 font-extrabold border border-transparent' 
                             : 'text-[#4A524F] bg-white border border-[#EAE7E1] hover:bg-[#FAF8F5] hover:border-[#244C38] hover:text-[#1C2220]' }}">
-                        <div class="p-1.5 rounded-lg bg-[#FAF8F5] group-hover:bg-white shrink-0 border border-[#FAF8F5]">
-                            <img src="{{ asset('images/editmenu.png') }}" alt="Manage Menu" class="w-4 h-4 object-contain">
+                        <div class="p-1.5 rounded-lg bg-[#FAF8F5] shrink-0 border border-[#FAF8F5]">
+                            <img src="{{ asset('images/kelolamenu.png') }}" alt="Manage Menu" class="w-4 h-4 object-contain">
                         </div>
                         <span>Manage Menu</span>
+                    </a>
+
+                    <a href="{{ url('/kelola-stok') }}"
+                    class="w-full py-3 px-4 text-xs font-bold tracking-wider uppercase rounded-xl transition-all duration-200 flex items-center gap-3 
+                    {{ request()->is('kelola-stok*') || request()->is('ingredients*')
+                            ? 'bg-[#244C38] text-white shadow-md shadow-[#244C38]/15 font-extrabold border border-transparent' 
+                            : 'text-[#4A524F] bg-white border border-[#EAE7E1] hover:bg-[#FAF8F5] hover:border-[#244C38] hover:text-[#1C2220]' }}">
+                        <div class="p-1 rounded-lg bg-[#FAF8F5] shrink-0 border border-[#FAF8F5] flex items-center justify-center w-7 h-7">
+                            <img src="{{ asset('images/inventory.png') }}" alt="Inventory" class="w-full h-full object-contain">
+                        </div>
+                        <span>Manage Stock</span>
                     </a>
                 </div>
             </div>
@@ -90,6 +101,7 @@
         <div class="flex-1 flex overflow-hidden">
             @yield('content')
         </div>
+
     </div>
 </body>
 </html>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\MenuManagementController;
+use App\Http\Controllers\IngredientController;
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
@@ -12,14 +13,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 Route::middleware(['auth'])->group(function () {
     Route::get('/kasir', [KasirController::class, 'index'])->name('kasir.index');
     Route::post('/kasir/checkout', [KasirController::class, 'checkout'])->name('kasir.checkout');
-
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index');
-
     Route::get('/riwayat-transaksi', [\App\Http\Controllers\RiwayatController::class, 'index'])->name('riwayat.index');
 });
 
 Route::delete('/riwayat-transaksi/{id}', [App\Http\Controllers\TransaksiController::class, 'destroy'])->name('transaksi.destroy');
-
 Route::get('/', [\App\Http\Controllers\RedirectController::class, 'home'])->middleware('auth')->name('home');
 
 Route::get('/simulasi-lunas/{order_id}', function($order_id) {
@@ -36,3 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('kelola-menu/category', [MenuManagementController::class, 'storeCategory'])->name('kelola-menu.storeCategory');
     Route::delete('kelola-menu/category/{id}', [MenuManagementController::class, 'destroyCategory'])->name('kelola-menu.destroyCategory');
 });
+
+Route::get('/kelola-stok', [IngredientController::class, 'index'])->name('kelola-stok.index');
+Route::post('/kelola-stok', [IngredientController::class, 'store'])->name('kelola-stok.store');
+Route::put('/kelola-stok/{id}', [IngredientController::class, 'update'])->name('kelola-stok.update');
+Route::delete('/kelola-stok/{id}', [IngredientController::class, 'destroy'])->name('kelola-stok.destroy');

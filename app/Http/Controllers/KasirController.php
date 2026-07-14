@@ -13,8 +13,9 @@ class KasirController extends Controller
 {
     public function index()
     {
-        $products = Product::with('category')->get();
-        $categories = Category::all();
+        $products = Product::with(['category', 'ingredient'])->get();
+        
+        $categories = Category::all(); 
 
         return view('kasir.kasir', compact('products', 'categories'));
     }

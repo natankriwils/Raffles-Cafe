@@ -3,6 +3,19 @@
 @section('content')
 @php
     $mappedProducts = $products->map(function($p) {
+        $isAvailable = true;
+        $currentStockText = 'Ready';
+
+        if ($p->is_instant) {
+            $isAvailable = $p->stock > 0;
+            $currentStockText = $p->stock . ' pcs';
+        } else {
+            if ($p->ingredient) {
+                $isAvailable = $p->ingredient->stock > 0;
+                $currentStockText = $p->ingredient->stock . ' ' . $p->ingredient->unit;
+            }
+        }
+
         return [
             'id' => $p->id,
             'name' => $p->name,
@@ -10,6 +23,8 @@
             'base_price' => (int) $p->base_price,
             'category_slug' => $p->category ? strtolower($p->category->slug) : 'other',
             'category_name' => $p->category ? $p->category->name : 'Other',
+            'is_available' => $isAvailable,
+            'stock_text' => $currentStockText,
         ];
     })->values();
 @endphp
@@ -53,20 +68,31 @@
 
         <div class="grid grid-cols-3 xl:grid-cols-4 gap-5 pb-6">
             <template x-for="product in filteredProducts" :key="product.id">
-                <div class="bg-white rounded-2xl border border-[#EAE7E1] p-4 flex flex-col justify-between hover:border-[#244C38] hover:shadow-lg hover:shadow-[#1C2220]/5 transition-all duration-200 cursor-pointer group"
-                     @click="addToCart(product)">
+                <div class="bg-white rounded-2xl border p-4 flex flex-col justify-between transition-all duration-200 group relative"
+                     :class="product.is_available ? 'border-[#EAE7E1] hover:border-[#244C38] hover:shadow-lg hover:shadow-[#1C2220]/5 cursor-pointer' : 'border-rose-100 bg-gray-50/50 opacity-65 cursor-not-allowed'"
+                     @click="product.is_available ? addToCart(product) : null">
 
                     <div>
-                        <div class="w-full h-32 rounded-xl mb-3 flex items-center justify-center p-4 text-center bg-[#FAF8F5] border border-[#EAE7E1]/60 group-hover:bg-[#244C38] transition-colors duration-300">
-                            <span class="font-extrabold text-base text-[#1C2220] group-hover:text-white transition-colors duration-300" x-text="product.name"></span>
+                        <div class="w-full h-32 rounded-xl mb-3 flex items-center justify-center p-4 text-center border transition-colors duration-300"
+                             :class="product.is_available ? 'bg-[#FAF8F5] border-[#EAE7E1]/60 group-hover:bg-[#244C38]' : 'bg-rose-50/50 border-rose-100/40'">
+                            <span class="font-extrabold text-base transition-colors duration-300" 
+                                  :class="product.is_available ? 'text-[#1C2220] group-hover:text-white' : 'text-rose-900/40'" 
+                                  x-text="product.name"></span>
                         </div>
-                        <h3 class="font-bold text-[#1C2220] text-sm md:text-base leading-snug" x-text="product.name"></h3>
+                        <h3 class="font-bold text-sm md:text-base leading-snug" 
+                            :class="product.is_available ? 'text-[#1C2220]' : 'text-gray-400 line-through'" 
+                            x-text="product.name"></h3>
                         <p class="text-[11px] text-[#7A827E] mt-1 line-clamp-2" x-text="product.description"></p>
                     </div>
 
                     <div class="flex justify-between items-center mt-4 pt-3 border-t border-[#FAF8F5]">
-                        <span class="font-extrabold text-[#244C38] text-sm md:text-base" x-text="formatRupiah(product.base_price)"></span>
-                        <span class="text-[9px] bg-[#FAF8F5] text-[#4A524F] font-extrabold uppercase tracking-wider px-2 py-1 rounded-md border border-[#EAE7E1]">Ready</span>
+                        <span class="font-extrabold text-sm md:text-base" 
+                              :class="product.is_available ? 'text-[#244C38]' : 'text-gray-400'" 
+                              x-text="formatRupiah(product.base_price)"></span>
+                        
+                        <span :class="product.is_available ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200 animate-pulse'"
+                              class="text-[9px] font-extrabold uppercase tracking-wider px-2 py-1 rounded-md border"
+                              x-text="product.is_available ? 'Ready' : 'Empty'"></span>
                     </div>
                 </div>
             </template>
