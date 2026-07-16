@@ -5,24 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
-    {
-        protected $fillable = [
+{
+    protected $fillable = [
         'name',
         'slug',
         'category_id',
-        'ingredient_id',
-        'price',
+        'base_price',
         'stock',
         'is_instant',
         'image',
         'description',
     ];
 
-    public function ingredient()
+    public function ingredients(): BelongsToMany
     {
-        return $this->belongsTo(Ingredient::class);
+        return $this->belongsToMany(Ingredient::class, 'product_ingredient')
+                    ->withPivot('quantity_needed')
+                    ->withTimestamps();
     }
 
     public function category(): BelongsTo

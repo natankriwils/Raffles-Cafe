@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ingredient extends Model
 {
@@ -19,8 +18,10 @@ class Ingredient extends Model
         'min_stock',
     ];
 
-    public function products()
+    public function products(): BelongsToMany
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsToMany(Product::class, 'product_ingredient')
+                    ->withPivot('quantity_needed')
+                    ->withTimestamps();
     }
 }
