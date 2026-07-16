@@ -50,7 +50,7 @@
 
                     <div>
                         <div class="w-full h-32 rounded-xl mb-3 flex items-center justify-center p-4 border bg-[#FAF8F5]">
-                            <span class="font-extrabold text-[#1C2220]" x-text="product.name.substring(0,2)"></span>
+                            <span class="font-extrabold text-[#1C2220] text-center" x-text="product.name"></span>
                         </div>
                         <h3 class="font-bold text-sm md:text-base leading-snug text-[#1C2220]" 
                             x-text="product.name"></h3> 

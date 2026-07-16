@@ -49,7 +49,7 @@ class KasirController extends Controller
                 'id' => $p->id,
                 'name' => $p->name,
                 'description' => $p->description,
-                'base_price' => (int) $p->price,
+                'base_price' => (int) $p->base_price,
                 'category_slug' => $p->category ? strtolower($p->category->slug) : 'other',
                 'category_name' => $p->category ? $p->category->name : 'Other',
                 'is_available' => $isAvailable,
