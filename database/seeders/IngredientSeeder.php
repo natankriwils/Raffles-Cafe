@@ -19,19 +19,16 @@ class IngredientSeeder extends Seeder
 
         $ingredients = [
             ['name' => 'Espresso Coffee Beans', 'stock' => 8, 'unit' => 'Bag (1kg)', 'min_stock' => 2],
-            ['name' => 'Fresh Milk Greenfields', 'stock' => 15, 'unit' => 'Box (1L)', 'min_stock' => 5],
-            ['name' => 'Oat Milk Barista', 'stock' => 6, 'unit' => 'Box (1L)', 'min_stock' => 2],
-            
-            ['name' => 'Matcha Powder Premium', 'stock' => 4, 'unit' => 'Pack (500g)', 'min_stock' => 1],
-            ['name' => 'Dark Chocolate Powder', 'stock' => 5, 'unit' => 'Pack (1kg)', 'min_stock' => 1],
-            ['name' => 'Earl Grey Tea', 'stock' => 10, 'unit' => 'Box (25s)', 'min_stock' => 2],
-            
-            ['name' => 'Caramel Syrup Monin', 'stock' => 3, 'unit' => 'Bottle (750ml)', 'min_stock' => 1],
-            ['name' => 'Vanilla Syrup Monin', 'stock' => 3, 'unit' => 'Bottle (750ml)', 'min_stock' => 1],
-            ['name' => 'Liquid Palm Sugar', 'stock' => 5, 'unit' => 'Jerrycan (1L)', 'min_stock' => 2],
-            
-            ['name' => 'Paper Cup Hot 12oz', 'stock' => 10, 'unit' => 'Sleeve (50 pcs)', 'min_stock' => 2],
+            ['name' => 'Fresh Milk', 'stock' => 15, 'unit' => 'Box (1L)', 'min_stock' => 5],
+            ['name' => 'Gallon Water', 'stock' => 8, 'unit' => 'Gallon (18L)', 'min_stock' => 4],
+            ['name' => 'Matcha Powder', 'stock' => 4, 'unit' => 'Pack (500g)', 'min_stock' => 1],
+            ['name' => 'Chocolate Powder', 'stock' => 5, 'unit' => 'Pack (500g)', 'min_stock' => 1],
+            ['name' => 'Caramel Syrup', 'stock' => 3, 'unit' => 'Bottle (750ml)', 'min_stock' => 1],
             ['name' => 'Plastic Cup Ice 16oz', 'stock' => 12, 'unit' => 'Sleeve (50 pcs)', 'min_stock' => 2],
+            ['name' => 'Croissant', 'stock' => 10, 'unit' => 'pcs', 'min_stock' => 0],
+            ['name' => 'Cheesecake', 'stock' => 10, 'unit' => 'pcs', 'min_stock' => 0],
+            ['name' => 'Beed Toast Bread', 'stock' => 10, 'unit' => 'pcs', 'min_stock' => 0],
+            ['name' => 'Red Velvet Cake', 'stock' => 10, 'unit' => 'pcs', 'min_stock' => 0]
         ];
 
         foreach ($ingredients as $item) {
