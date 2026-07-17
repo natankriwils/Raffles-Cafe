@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,19 +17,20 @@ class DashboardController extends Controller
         $monthStart = now()->startOfMonth();
         $monthEnd = now()->endOfMonth();
 
+        // 1. STATISTIK HARI INI (Hanya hitung pendapatan dari pesanan 'completed')
         $todayTotal = Order::query()
             ->whereBetween('created_at', [$todayStart, $todayEnd])
-            ->where('payment_status', 'success')
+            ->where('status', 'completed')
             ->sum('total_amount');
 
         $todayCountSuccess = Order::query()
             ->whereBetween('created_at', [$todayStart, $todayEnd])
-            ->where('payment_status', 'success')
+            ->where('status', 'completed')
             ->count();
 
         $todayCountPending = Order::query()
             ->whereBetween('created_at', [$todayStart, $todayEnd])
-            ->where('payment_status', 'pending')
+            ->where('status', 'pending')
             ->count();
 
         $todayCustomers = $todayCountSuccess + $todayCountPending;
@@ -43,7 +45,7 @@ class DashboardController extends Controller
 
             $sum = Order::query()
                 ->whereBetween('created_at', [$start, $end])
-                ->where('payment_status', 'success')
+                ->where('status', 'completed')
                 ->sum('total_amount');
 
             $daily[] = [
@@ -67,7 +69,7 @@ class DashboardController extends Controller
                 'label' => $d->format('d/m'),
                 'amount' => Order::query()
                     ->whereBetween('created_at', [$start, $end])
-                    ->where('payment_status', 'success')
+                    ->where('status', 'completed')
                     ->sum('total_amount'),
             ];
         }
@@ -77,16 +79,18 @@ class DashboardController extends Controller
 
         $monthTotal = Order::query()
             ->whereBetween('created_at', [$monthStart, $monthEnd])
-            ->where('payment_status', 'success')
+            ->where('status', 'completed')
             ->sum('total_amount');
 
-        $recentOrders = \App\Models\Order::query()
+        $recentOrders = Order::query()
             ->latest()
             ->take(7)
             ->get();
 
-        $allTopItems = \App\Models\OrderDetail::query()
+        $allTopItems = OrderDetail::query()
+            ->join('orders', 'order_details.order_id', '=', 'orders.id')
             ->join('products', 'order_details.product_id', '=', 'products.id')
+            ->where('orders.status', 'completed')
             ->select('products.name', DB::raw('SUM(order_details.quantity) as total_sold'))
             ->groupBy('products.name')
             ->orderByDesc('total_sold')
@@ -99,11 +103,16 @@ class DashboardController extends Controller
 
         $topItems = array_slice($allTopItems, 0, 4);
 
-        $totalSold = \App\Models\OrderDetail::sum('quantity');
+        $totalSold = OrderDetail::query()
+            ->join('orders', 'order_details.order_id', '=', 'orders.id')
+            ->where('orders.status', 'completed')
+            ->sum('order_details.quantity');
 
-        $allTopCategories = \App\Models\OrderDetail::query()
+        $allTopCategories = OrderDetail::query()
+            ->join('orders', 'order_details.order_id', '=', 'orders.id')
             ->join('products', 'order_details.product_id', '=', 'products.id')
             ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->where('orders.status', 'completed')
             ->select('categories.name', DB::raw('SUM(order_details.quantity) as cat_total'))
             ->groupBy('categories.name')
             ->orderByDesc('cat_total')
@@ -138,22 +147,6 @@ class DashboardController extends Controller
             'allTopItems' => $allTopItems,
             'topCategories' => $topCategories,
             'allTopCategories' => $allTopCategories,
-        ]);
-
-        return view('dashboard.dashboard', [
-            'todayTotal' => $todayTotal,
-            'weeklyTotal' => $weeklyTotal,
-            'todayCustomers' => $todayCustomers,
-            'todayCountSuccess' => $todayCountSuccess,
-            'todayCountPending' => $todayCountPending,
-            'dailyLabels' => $dailyLabels,
-            'dailyAmounts' => $dailyAmounts,
-            'monthlyLabels' => $monthlyLabels,
-            'monthlyAmounts' => $monthlyAmounts,
-            'monthTotal' => $monthTotal,
-            'recentOrders' => $recentOrders,
-            'topItems' => $topItems,
-            'topCategories' => $topCategories,
         ]);
     }
 }

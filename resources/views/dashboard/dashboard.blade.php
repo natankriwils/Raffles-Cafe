@@ -121,16 +121,16 @@
                                         @endif
                                     </td>
                                     <td class="py-2.5 px-3">
-                                        @if($order->payment_status === 'success')
+                                        @if($order->status === 'completed')
                                             <span class="inline-flex items-center gap-1 text-[10px] font-extrabold text-[#244C38] bg-[#EAF2EE] px-2 py-0.5 rounded-full border border-[#C5DCD0] uppercase">
-                                                <img src="{{ asset('images/success.png') }}" class="w-2.5 h-2.5 object-contain" alt="Success"> Success
+                                                <img src="{{ asset('images/success.png') }}" class="w-2.5 h-2.5 object-contain" alt="Success"> Completed
                                             </span>
-                                        @elseif($order->payment_status === 'pending')
+                                        @elseif($order->status === 'pending')
                                             <span class="inline-flex items-center gap-1 text-[10px] font-extrabold text-[#D99000] bg-[#FFF9E6] px-2 py-0.5 rounded-full border border-[#FFE8A3] uppercase">
                                                 <img src="{{ asset('images/pending.png') }}" class="w-2.5 h-2.5 object-contain" alt="Pending"> Pending
                                             </span>
                                         @else
-                                            <span class="text-[10px] font-bold text-gray-500 uppercase">{{ $order->payment_status }}</span>
+                                            <span class="text-[10px] font-bold text-gray-500 uppercase">{{ $order->status }}</span>
                                         @endif
                                     </td>
                                     <td class="py-2.5 px-3 text-right font-extrabold text-[#244C38]">Rp {{ number_format((float)$order->total_amount, 0, ',', '.') }}</td>

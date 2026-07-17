@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\MenuManagementController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\RiwayatController;
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
@@ -39,3 +40,7 @@ Route::get('/kelola-stok', [IngredientController::class, 'index'])->name('kelola
 Route::post('/kelola-stok', [IngredientController::class, 'store'])->name('kelola-stok.store');
 Route::put('/kelola-stok/{id}', [IngredientController::class, 'update'])->name('kelola-stok.update');
 Route::delete('/kelola-stok/{id}', [IngredientController::class, 'destroy'])->name('kelola-stok.destroy');
+
+Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+Route::get('/riwayat/{id}/struk', [RiwayatController::class, 'showStruk'])->name('riwayat.struk');
+Route::delete('/transaksi/{id}', [RiwayatController::class, 'destroy'])->name('transaksi.destroy');

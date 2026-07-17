@@ -6,23 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\OrderDetail;
 
 class Order extends Model
 {
     protected $fillable = [
         'order_number',
-        'user_id',          
-        'shift_id',         
+        'user_id',
+        'shift_id',
         'customer_name',
         'order_type',
-        'subtotal',
-        'tax',
-        'total_amount',
         'payment_method',
-        'payment_status',
-        'amount_paid',
-        'change',
-        'notes'
+        'subtotal',
+        'total_amount',
+        'status',
     ];
 
     public function user(): BelongsTo
@@ -43,5 +40,10 @@ class Order extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id');
     }
 }

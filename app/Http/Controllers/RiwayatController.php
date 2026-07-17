@@ -20,5 +20,11 @@ class RiwayatController extends Controller
 
         return view('transaksi.riwayat-transaksi', compact('orders'));
     }
-}
 
+    public function showStruk($id)
+    {
+        $order = Order::with('orderDetails.product')->findOrFail($id);
+        
+        return view('riwayat.struk', compact('order'));
+    }
+}

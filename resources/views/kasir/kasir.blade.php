@@ -114,7 +114,7 @@
                 <div class="pt-3 first:pt-0 flex items-start justify-between">
                     <div class="flex-1 pr-2">
                         <h4 class="font-bold text-[#1C2220] text-xs leading-snug" x-text="item.name"></h4>
-                        <span class="text-[11px] font-extrabold text-[#244C38] block mt-0.5" x-text="formatRupiah(item.price * item.qty)"></span>
+                        <span class="text-[11px] font-extrabold text-[#244C38] block mt-0.5" x-text="formatRupiah(item.base_price * item.qty)"></span>
                     </div>
                     <div class="flex items-center space-x-1 bg-[#FAF8F5] p-1 rounded-lg border border-[#EAE7E1]">
                         <button class="w-6 h-6 bg-white hover:bg-[#1C2220] hover:text-white text-[#4A524F] rounded-md text-xs font-bold transition-colors flex items-center justify-center shadow-sm"
@@ -224,7 +224,7 @@
                     this.cart.push({
                         id: product.id,
                         name: product.name,
-                        price: product.price,
+                        base_price: product.base_price,
                         qty: 1
                     });
                 }
@@ -235,7 +235,7 @@
             },
 
             get subtotal() {
-                return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                return this.cart.reduce((sum, item) => sum + (item.base_price * item.qty), 0);
             },
 
             get tax() {
@@ -254,8 +254,20 @@
                 return 'Rp ' + new Intl.NumberFormat('id-ID').format(number);
             },
 
+            openReceipt(orderId) {
+                const url = `/riwayat/${orderId}/struk`;
+                const width = 380;
+                const height = 620;
+                const left = (screen.width - width) / 2;
+                const top = (screen.height - height) / 2;
+                window.open(url, 'StrukDailyCoffee', `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=no`);
+                location.reload();
+            },
+
             submitOrder() {
                 if (this.cart.length === 0) return;
+
+                let self = this; 
 
                 fetch('/kasir/checkout', {
                     method: 'POST',
@@ -281,8 +293,7 @@
 
                         window.snap.pay(data.snap_token, {
                             onSuccess: function(result){
-                                alert('Payment Successful!');
-                                location.reload();
+                                self.openReceipt(data.order_id); 
                             },
                             onPending: function(result){
                                 alert('Order ID: ' + data.order_id + '\n\nPlease check status or simulate payment in Midtrans Sandbox.');
@@ -293,8 +304,7 @@
                             }
                         });
                     } else if (data.success) {
-                        alert('Cash Transaction Saved Successfully!');
-                        location.reload();
+                        self.openReceipt(data.order_id); 
                     }
                 })
                 .catch(err => {
